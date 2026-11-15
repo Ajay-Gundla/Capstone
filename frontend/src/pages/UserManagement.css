@@ -1,0 +1,94 @@
+
+.user-management {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 40px;
+  color: #171717;
+}
+
+.user-management h1 {
+  font-size: 30px;
+  margin: 0 0 8px;
+  color: #111111;
+}
+
+.user-management > p {
+  color: #737373;
+  font-size: 14px;
+  margin-bottom: 28px;
+}
+
+.user-filters {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.user-filters input,
+.user-filters select {
+  padding: 12px 14px;
+  border: 1px solid #d4d4d4;
+  border-radius: 7px;
+  background: #ffffff;
+  color: #171717;
+  font-size: 14px;
+  outline: none;
+}
+
+.user-filters input {
+  width: 320px;
+}
+
+.user-filters input:focus,
+.user-filters select:focus {
+  border-color: #171717;
+}
+
+.users-table-wrapper {
+  width: 100%;
+  overflow-x: auto;
+  background: #ffffff;
+  border: 1px solid #e5e5e5;
+  border-radius: 10px;
+}
+
+.users-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+}
+
+.users-table th {
+  padding: 16px 20px;
+  background: #f5f5f5;
+  color: #525252;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.7px;
+}
+
+.users-table td {
+  padding: 18px 20px;
+  border-top: 1px solid #eeeeee;
+  color: #404040;
+  font-size: 14px;
+}
+
+.users-table tr:hover td {
+  background: #fafafa;
+}
+
+@media (max-width: 600px) {
+  .user-management {
+    padding: 20px;
+  }
+
+  .user-filters {
+    flex-direction: column;
+  }
+
+  .user-filters input {
+    width: 100%;
+  }
+}
+
