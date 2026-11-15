@@ -4,6 +4,7 @@ import './TeacherDashboard.css'
 
 function TeacherDashboard({ user }) {
   const [showForm, setShowForm] = useState(false)
+  const [editingId, setEditingId] = useState(null)
 
   const [form, setForm] = useState({
     title: '',
@@ -32,6 +33,9 @@ function TeacherDashboard({ user }) {
     const updatedTestCases = [...testCases]
     updatedTestCases[index][field] = value
     setTestCases(updatedTestCases)
+    const updated = [...testCases]
+    updated[index][field] = value
+    setTestCases(updated)
   }
 
   const addTestCase = () => {
@@ -47,6 +51,7 @@ function TeacherDashboard({ user }) {
     setTestCases(
       testCases.filter((_, i) => i !== index)
     )
+    setTestCases(testCases.filter((_, i) => i !== index))
   }
 
   const resetForm = () => {
@@ -63,6 +68,8 @@ function TeacherDashboard({ user }) {
     setTestCases([
       { input: '', expectedOutput: '' }
     ])
+    setTestCases([{ input: '', expectedOutput: '' }])
+    setEditingId(null)
   }
 
   const handleCreateProblem = (e) => {
@@ -78,6 +85,48 @@ function TeacherDashboard({ user }) {
     setProblems([...problems, newProblem])
     setShowForm(false)
     resetForm()
+    if (editingId !== null) {
+      setProblems(problems.map((problem) =>
+        problem.id === editingId
+          ? { ...form, id: editingId, status: problem.status, testCases: [...testCases] }
+          : problem
+      ))
+    } else {
+      const newProblem = {
+        ...form,
+        id: Date.now(),
+        status: 'Draft',
+        testCases: [...testCases]
+      }
+
+      setProblems([...problems, newProblem])
+    }
+
+    resetForm()
+    setShowForm(false)
+  }
+
+  const handleEdit = (problem) => {
+    setForm({
+      title: problem.title,
+      slug: problem.slug,
+      description: problem.description,
+      difficulty: problem.difficulty,
+      constraints: problem.constraints,
+      exampleInput: problem.exampleInput,
+      exampleOutput: problem.exampleOutput
+    })
+
+    setTestCases([...problem.testCases])
+    setEditingId(problem.id)
+    setShowForm(true)
+
+    window.scrollTo({ top: 0, behavior: 'smooth' })
+  }
+
+  const handleCancel = () => {
+    resetForm()
+    setShowForm(false)
   }
 
   return (
@@ -100,11 +149,13 @@ function TeacherDashboard({ user }) {
         <div className="stat-card">
           <span>Published Problems</span>
           <h2>0</h2>
+          <h2>{problems.filter(p => p.status === 'Published').length}</h2>
         </div>
 
         <div className="stat-card">
           <span>Draft Problems</span>
           <h2>{problems.length}</h2>
+          <h2>{problems.filter(p => p.status === 'Draft').length}</h2>
         </div>
       </div>
 
@@ -117,6 +168,14 @@ function TeacherDashboard({ user }) {
         <button
           className="create-problem-button"
           onClick={() => setShowForm(!showForm)}
+          onClick={() => {
+            if (showForm) {
+              handleCancel()
+            } else {
+              resetForm()
+              setShowForm(true)
+            }
+          }}
         >
           {showForm ? 'Cancel' : '+ Create Problem'}
         </button>
@@ -125,6 +184,7 @@ function TeacherDashboard({ user }) {
       {showForm && (
         <section className="create-problem-form">
           <h2>Create New Problem</h2>
+          <h2>{editingId !== null ? 'Edit Problem' : 'Create New Problem'}</h2>
 
           <form onSubmit={handleCreateProblem}>
             <label>Problem Title</label>
@@ -240,6 +300,8 @@ function TeacherDashboard({ user }) {
               className="create-problem-button"
             >
               Save as Draft
+            <button type="submit" className="create-problem-button">
+              {editingId !== null ? 'Save Changes' : 'Save as Draft'}
             </button>
           </form>
         </section>
@@ -263,6 +325,50 @@ function TeacherDashboard({ user }) {
               </div>
 
               <span>{problem.status}</span>
+              <div className="problem-actions">
+  <span>{problem.status}</span>
+
+  <button
+    type="button"
+    className="edit-problem-button"
+    onClick={() => handleEdit(problem)}
+  >
+    Edit
+  </button>
+
+  <button
+    type="button"
+    className="publish-problem-button"
+    onClick={() => {
+      setProblems(problems.map((p) =>
+        p.id === problem.id
+          ? {
+              ...p,
+              status: p.status === 'Draft' ? 'Published' : 'Draft'
+            }
+          : p
+      ))
+    }}
+  >
+    {problem.status === 'Draft' ? 'Publish' : 'Unpublish'}
+  </button>
+
+  <button
+    type="button"
+    className="delete-problem-button"
+    onClick={() => {
+      const confirmed = window.confirm(
+        `Are you sure you want to delete "${problem.title}"?`
+      )
+
+      if (confirmed) {
+        setProblems(problems.filter((p) => p.id !== problem.id))
+      }
+    }}
+  >
+    Delete
+  </button>
+</div>
             </div>
           ))
         )}

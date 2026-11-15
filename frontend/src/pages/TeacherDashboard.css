@@ -248,3 +248,46 @@
   background: #eeeeee;
 }
 
+
+.problem-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.edit-problem-button {
+  background: #ffffff;
+  color: #111111;
+  border: 1px solid #cccccc;
+  border-radius: 6px;
+  padding: 8px 16px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.edit-problem-button:hover {
+  background: #eeeeee;
+}
+
+
+.publish-problem-button {
+  background: #111111;
+  color: #ffffff;
+  border: 1px solid #111111;
+  border-radius: 6px;
+  padding: 8px 16px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.publish-problem-button:hover {
+  background: #333333;
+}
+
+.problem-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+

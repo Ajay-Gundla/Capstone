@@ -131,3 +131,81 @@
   }
 }
 
+
+.delete-problem-button {
+  background: #ffffff;
+  color: #b42318;
+  border: 1px solid #e0b4b0;
+  border-radius: 6px;
+  padding: 8px 16px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.delete-problem-button:hover {
+  background: #fff1f0;
+  border-color: #b42318;
+}
+
+
+.manage-problem-form {
+  margin: 25px 0;
+  padding: 25px;
+  background: #ffffff;
+  border: 1px solid #e5e5e5;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.manage-problem-form h2 {
+  margin-bottom: 10px;
+  color: #111111;
+}
+
+.manage-problem-form label {
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.manage-problem-form input,
+.manage-problem-form select {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #dddddd;
+  border-radius: 6px;
+  box-sizing: border-box;
+  font-family: inherit;
+}
+
+.teacher-problem-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.teacher-problem-actions button {
+  background: #ffffff;
+  color: #111111;
+  border: 1px solid #cccccc;
+  border-radius: 6px;
+  padding: 8px 13px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.teacher-problem-actions button:hover {
+  background: #eeeeee;
+}
+
+.teacher-problem-actions button:last-child {
+  color: #b42318;
+  border-color: #e0b4b0;
+}
+
+.teacher-problem-actions button:last-child:hover {
+  background: #fff1f0;
+}

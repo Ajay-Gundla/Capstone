@@ -9,6 +9,8 @@ import TeacherDashboard from './pages/TeacherDashboard'
 import AdminDashboard from './pages/AdminDashboard'
 import UserManagement from './pages/UserManagement'
 import TeacherProblems from './pages/TeacherProblems'
+import SubmissionHistory from './pages/SubmissionHistory'
+import StudentProgress from './pages/StudentProgress'
 
 function App() {
   const [user, setUser] = useState(() => {
@@ -98,6 +100,12 @@ function App() {
           Progress page coming soon
         </h2>
       )}
+      {activePage === 'Progress' && user.role === 'student' && (
+  <StudentProgress />
+)}
+      {activePage === 'Submissions' && user.role === 'student' && (
+  <SubmissionHistory />
+)}
     </>
   )
 }

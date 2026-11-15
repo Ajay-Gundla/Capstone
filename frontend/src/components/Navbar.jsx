@@ -4,6 +4,7 @@ import './Navbar.css'
 function Navbar({ activePage, setActivePage, handleLogout, user }) {
   const rolePages = {
     student: ['Dashboard', 'Problems', 'Workspace', 'Progress'],
+    student: ['Dashboard', 'Problems', 'Workspace', 'Progress', 'Submissions'],
     teacher: ['Dashboard', 'Manage Problems'],
     admin: ['Dashboard', 'Manage Users', 'Manage Problems'],
   }

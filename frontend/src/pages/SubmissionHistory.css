@@ -1,0 +1,151 @@
+
+.submission-history {
+  width: 100%;
+  max-width: 1250px;
+  margin: 0 auto;
+  padding: 40px 24px;
+  box-sizing: border-box;
+}
+
+.submission-header {
+  margin-bottom: 30px;
+}
+
+.submission-label {
+  color: #777777;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 2px;
+}
+
+.submission-header h1 {
+  color: #111111;
+  font-size: 32px;
+  margin: 10px 0;
+}
+
+.submission-header p {
+  color: #777777;
+}
+
+.submission-stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 18px;
+  margin-bottom: 30px;
+}
+
+.submission-stat-card {
+  padding: 24px;
+  background: #ffffff;
+  border: 1px solid #e5e5e5;
+  border-radius: 10px;
+}
+
+.submission-stat-card span {
+  color: #777777;
+  font-size: 14px;
+}
+
+.submission-stat-card h2 {
+  color: #111111;
+  font-size: 30px;
+  margin: 12px 0 0;
+}
+
+.submission-table-section {
+  background: #ffffff;
+  border: 1px solid #e5e5e5;
+  border-radius: 10px;
+  padding: 24px;
+}
+
+.submission-table-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 15px;
+  margin-bottom: 22px;
+}
+
+.submission-table-header h2 {
+  color: #111111;
+  font-size: 20px;
+}
+
+.submission-table-header select {
+  padding: 10px 14px;
+  border: 1px solid #dddddd;
+  border-radius: 6px;
+  background: #ffffff;
+}
+
+.submission-table-wrapper {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.submission-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+  min-width: 700px;
+}
+
+.submission-table th {
+  padding: 15px;
+  color: #777777;
+  font-size: 13px;
+  border-bottom: 1px solid #e5e5e5;
+}
+
+.submission-table td {
+  padding: 18px 15px;
+  color: #333333;
+  font-size: 14px;
+  border-bottom: 1px solid #eeeeee;
+}
+
+.verdict {
+  display: inline-block;
+  padding: 6px 10px;
+  border-radius: 5px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.verdict.accepted {
+  color: #166534;
+  background: #dcfce7;
+}
+
+.verdict.wrong-answer {
+  color: #991b1b;
+  background: #fee2e2;
+}
+
+.verdict.runtime-error {
+  color: #92400e;
+  background: #fef3c7;
+}
+
+.no-submissions {
+  text-align: center;
+  color: #777777;
+  padding: 25px;
+}
+
+@media (max-width: 700px) {
+  .submission-stats {
+    grid-template-columns: 1fr;
+  }
+
+  .submission-table-header {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .submission-header h1 {
+    font-size: 26px;
+  }
+}

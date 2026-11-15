@@ -15,12 +15,94 @@ function TeacherProblems() {
   const filteredProblems = problems.filter((problem) => {
     const matchesSearch = problem.title.toLowerCase().includes(search.toLowerCase())
     const matchesDifficulty = difficulty === 'All' || problem.difficulty === difficulty
+  const [showForm, setShowForm] = useState(false)
+  const [editingId, setEditingId] = useState(null)
+
+  const [problems, setProblems] = useState([
+    { id: 1, title: 'Two Sum', difficulty: 'Easy', status: 'Published' },
+    { id: 2, title: 'Reverse Linked List', difficulty: 'Medium', status: 'Draft' },
+    { id: 3, title: 'Binary Tree Paths', difficulty: 'Hard', status: 'Published' },
+  ])
+
+  const [form, setForm] = useState({
+    title: '',
+    difficulty: 'Easy'
+  })
+
+  const filteredProblems = problems.filter((problem) => {
+    const matchesSearch = problem.title
+      .toLowerCase()
+      .includes(search.toLowerCase())
+
+    const matchesDifficulty =
+      difficulty === 'All' || problem.difficulty === difficulty
 
     return matchesSearch && matchesDifficulty
   })
 
   return (
     <div className="teacher-problems">
+  const handleSubmit = (e) => {
+    e.preventDefault()
+
+    if (editingId !== null) {
+      setProblems(problems.map((problem) =>
+        problem.id === editingId
+          ? { ...problem, ...form }
+          : problem
+      ))
+    } else {
+      setProblems([
+        ...problems,
+        {
+          id: Date.now(),
+          ...form,
+          status: 'Draft'
+        }
+      ])
+    }
+
+    setForm({ title: '', difficulty: 'Easy' })
+    setEditingId(null)
+    setShowForm(false)
+  }
+
+  const handleEdit = (problem) => {
+    setForm({
+      title: problem.title,
+      difficulty: problem.difficulty
+    })
+
+    setEditingId(problem.id)
+    setShowForm(true)
+  }
+
+  const handleDelete = (problem) => {
+    const confirmed = window.confirm(
+      `Delete "${problem.title}"?`
+    )
+
+    if (confirmed) {
+      setProblems(problems.filter(
+        (p) => p.id !== problem.id
+      ))
+    }
+  }
+
+  const togglePublish = (problem) => {
+    setProblems(problems.map((p) =>
+      p.id === problem.id
+        ? {
+            ...p,
+            status: p.status === 'Draft' ? 'Published' : 'Draft'
+          }
+        : p
+    ))
+  }
+
+  return (
+    <div className="teacher-problems">
+
       <div className="teacher-problems-header">
         <div>
           <h1>Manage Problems</h1>
@@ -31,6 +113,51 @@ function TeacherProblems() {
           + Create Problem
         </button>
       </div>
+
+        <button
+          className="add-problem-button"
+          onClick={() => {
+            setForm({ title: '', difficulty: 'Easy' })
+            setEditingId(null)
+            setShowForm(!showForm)
+          }}
+        >
+          {showForm ? 'Cancel' : '+ Create Problem'}
+        </button>
+      </div>
+
+      {showForm && (
+        <form className="manage-problem-form" onSubmit={handleSubmit}>
+          <h2>{editingId !== null ? 'Edit Problem' : 'Create New Problem'}</h2>
+
+          <label>Problem Title</label>
+          <input
+            type="text"
+            placeholder="Enter problem title"
+            value={form.title}
+            onChange={(e) =>
+              setForm({ ...form, title: e.target.value })
+            }
+            required
+          />
+
+          <label>Difficulty</label>
+          <select
+            value={form.difficulty}
+            onChange={(e) =>
+              setForm({ ...form, difficulty: e.target.value })
+            }
+          >
+            <option>Easy</option>
+            <option>Medium</option>
+            <option>Hard</option>
+          </select>
+
+          <button type="submit" className="add-problem-button">
+            {editingId !== null ? 'Save Changes' : 'Save as Draft'}
+          </button>
+        </form>
+      )}
 
       <div className="teacher-problem-filters">
         <input
@@ -62,12 +189,29 @@ function TeacherProblems() {
             <div className="teacher-problem-actions">
               <span>{problem.status}</span>
               <button>Edit</button>
+
+              <button onClick={() => handleEdit(problem)}>
+                Edit
+              </button>
+
+              <button onClick={() => togglePublish(problem)}>
+                {problem.status === 'Draft' ? 'Publish' : 'Unpublish'}
+              </button>
+
+              <button onClick={() => handleDelete(problem)}>
+                Delete
+              </button>
             </div>
           </div>
         ))}
 
         {filteredProblems.length === 0 && <p>No problems found.</p>}
       </div>
+        {filteredProblems.length === 0 && (
+          <p>No problems found.</p>
+        )}
+      </div>
+
     </div>
   )
 }
