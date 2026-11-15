@@ -5,6 +5,16 @@ import './TeacherProblems.css'
 function TeacherProblems() {
   const [search, setSearch] = useState('')
   const [difficulty, setDifficulty] = useState('All')
+
+  const problems = [
+    { id: 1, title: 'Two Sum', difficulty: 'Easy', status: 'Published' },
+    { id: 2, title: 'Reverse Linked List', difficulty: 'Medium', status: 'Draft' },
+    { id: 3, title: 'Binary Tree Paths', difficulty: 'Hard', status: 'Published' },
+  ]
+
+  const filteredProblems = problems.filter((problem) => {
+    const matchesSearch = problem.title.toLowerCase().includes(search.toLowerCase())
+    const matchesDifficulty = difficulty === 'All' || problem.difficulty === difficulty
   const [showForm, setShowForm] = useState(false)
   const [editingId, setEditingId] = useState(null)
 
@@ -30,6 +40,8 @@ function TeacherProblems() {
     return matchesSearch && matchesDifficulty
   })
 
+  return (
+    <div className="teacher-problems">
   const handleSubmit = (e) => {
     e.preventDefault()
 
@@ -96,6 +108,11 @@ function TeacherProblems() {
           <h1>Manage Problems</h1>
           <p>Create, edit and manage your coding problems.</p>
         </div>
+
+        <button className="add-problem-button">
+          + Create Problem
+        </button>
+      </div>
 
         <button
           className="add-problem-button"
@@ -171,6 +188,7 @@ function TeacherProblems() {
 
             <div className="teacher-problem-actions">
               <span>{problem.status}</span>
+              <button>Edit</button>
 
               <button onClick={() => handleEdit(problem)}>
                 Edit
@@ -187,6 +205,8 @@ function TeacherProblems() {
           </div>
         ))}
 
+        {filteredProblems.length === 0 && <p>No problems found.</p>}
+      </div>
         {filteredProblems.length === 0 && (
           <p>No problems found.</p>
         )}
