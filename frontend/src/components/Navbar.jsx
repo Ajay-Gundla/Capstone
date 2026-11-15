@@ -1,17 +1,34 @@
+
 import './Navbar.css'
 
-function Navbar() {
+function Navbar({ activePage, setActivePage, handleLogout, user }) {
+  const rolePages = {
+    student: ['Dashboard', 'Problems', 'Workspace', 'Progress', 'Submissions'],
+    teacher: ['Dashboard', 'Manage Problems'],
+    admin: ['Dashboard', 'Manage Users', 'Manage Problems'],
+  }
+
+  const pages = rolePages[user?.role] || ['Dashboard']
+
   return (
     <nav className="navbar">
-      <h2 className="navbar-logo">AlgoPilot</h2>
+      <h2 className="navbar-logo">AlgoPilot<span>.</span></h2>
 
       <div className="navbar-links">
-        <a href="#">Dashboard</a>
-        <a href="#">Problems</a>
-        <a href="#">Progress</a>
+        {pages.map((page) => (
+          <button
+            key={page}
+            className={`nav-link ${activePage === page ? 'active' : ''}`}
+            onClick={() => setActivePage(page)}
+          >
+            {page}
+          </button>
+        ))}
       </div>
 
-      <button className="profile-button">Profile</button>
+      <button className="logout-button" onClick={handleLogout}>
+        Logout
+      </button>
     </nav>
   )
 }
