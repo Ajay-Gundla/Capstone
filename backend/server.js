@@ -5,6 +5,7 @@ const authRoutes = require('./routes/auth')
 const authenticateToken = require('./middleware/auth')
 const problemRoutes = require('./routes/problems')
 const authorizeRole = require('./middleware/authorizeRole')
+const aiRoutes = require('./src/ai/ai.routes')
 
 require('dotenv').config()
 
@@ -16,6 +17,7 @@ app.use(express.json())
 
 app.use('/api/auth', authRoutes)
 app.use('/api/problems', problemRoutes)
+app.use('/api/ai', aiRoutes)
 
 app.get('/', (req, res) => {
   res.json({ message: 'AlgoPilot Backend is running!' })
