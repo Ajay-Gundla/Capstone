@@ -89,3 +89,140 @@
     gap: 6px;
   }
 }
+
+.reset-button {
+  background: #ffffff !important;
+  color: #171717 !important;
+  border: 1px solid #d4d4d4 !important;
+}
+
+.reset-button:hover {
+  background: #e5e5e5 !important;
+}
+
+
+.save-draft-button {
+  background: #ffffff !important;
+  color: #171717 !important;
+  border: 1px solid #d4d4d4 !important;
+}
+
+.save-draft-button:hover {
+  background: #e5e5e5 !important;
+}
+
+.draft-save-info {
+  padding: 8px 14px;
+  background: #fafafa;
+  color: #737373;
+  border-top: 1px solid #e5e5e5;
+  font-size: 11px;
+}
+
+
+.draft-save-info {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  padding: 10px 14px;
+  background: #fafafa;
+  color: #737373;
+  border-top: 1px solid #e5e5e5;
+  font-size: 11px;
+}
+
+.draft-save-info button {
+  margin-left: auto;
+  padding: 5px 9px;
+  background: #fff;
+  border: 1px solid #d4d4d4;
+  border-radius: 5px;
+  color: #171717;
+  font-size: 11px;
+  cursor: pointer;
+}
+
+.draft-save-info button:hover {
+  background: #e5e5e5;
+}
+
+
+.fullscreen-button {
+  background: #ffffff !important;
+  color: #171717 !important;
+  border: 1px solid #d4d4d4 !important;
+}
+
+.fullscreen-button:hover {
+  background: #e5e5e5 !important;
+}
+
+.code-editor.fullscreen-mode {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  width: 100vw;
+  height: 100vh;
+  border-radius: 0;
+  background: #171717;
+  display: flex;
+  flex-direction: column;
+}
+
+.code-editor.fullscreen-mode .editor-toolbar {
+  flex-shrink: 0;
+}
+
+.code-editor.fullscreen-mode .draft-save-info {
+  flex-shrink: 0;
+}
+
+@media (max-width: 700px) {
+  .code-editor.fullscreen-mode .editor-toolbar {
+    flex-wrap: wrap;
+    height: auto;
+    padding: 8px;
+  }
+
+  .code-editor.fullscreen-mode .editor-actions {
+    flex-wrap: wrap;
+    margin-left: 0;
+  }
+}
+
+
+.font-controls {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  border: 1px solid #d4d4d4;
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.font-controls button {
+  min-width: 30px;
+  padding: 8px;
+  border: none;
+  background: #fff;
+  color: #171717;
+  cursor: pointer;
+  font-size: 13px;
+}
+
+.font-controls button:hover:not(:disabled) {
+  background: #e5e5e5;
+}
+
+.font-controls button:disabled {
+  color: #aaa;
+  cursor: not-allowed;
+}
+
+.font-controls button:nth-child(2) {
+  min-width: 45px;
+  border-left: 1px solid #e5e5e5;
+  border-right: 1px solid #e5e5e5;
+  font-size: 11px;
+}

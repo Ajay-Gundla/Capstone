@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react'
 import axios from 'axios'
 import './ProblemDescription.css'
 
-function ProblemDescription({ problemSlug }) {
+function ProblemDescription({ problemSlug, onProblemLoaded }) {
   const [problem, setProblem] = useState(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
@@ -26,6 +26,7 @@ function ProblemDescription({ problemSlug }) {
         )
 
         setProblem(response.data)
+        onProblemLoaded?.(response.data)
       } catch (err) {
         setError('Failed to load problem')
       } finally {
@@ -34,7 +35,7 @@ function ProblemDescription({ problemSlug }) {
     }
 
     fetchProblem()
-  }, [problemSlug])
+  }, [problemSlug, onProblemLoaded])
 
   if (loading) return <p>Loading problem...</p>
   if (error) return <p>{error}</p>
@@ -51,7 +52,7 @@ function ProblemDescription({ problemSlug }) {
       <h3>Problem</h3>
       <p>{problem.description}</p>
 
-      {problem.examples.map((example) => (
+      {(problem.examples || []).map((example) => (
         <div key={example.example_number}>
           <h3>Example {example.example_number}</h3>
 

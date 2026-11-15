@@ -1,8 +1,8 @@
 
 .teacher-problems {
-  max-width: 1400px;
-  margin: 0 auto;
-  padding: 40px;
+  max-width: 1200px;
+  margin: 40px auto;
+  padding: 0 30px 50px;
   color: #171717;
 }
 
@@ -15,153 +15,73 @@
 }
 
 .teacher-problems-header h1 {
-  margin: 0 0 8px;
   font-size: 30px;
+  margin: 0 0 10px;
 }
 
-.teacher-problems-header p {
-  color: #737373;
+.teacher-problems-header p,
+.problem-list-heading p {
+  color: #777;
+  margin: 0;
   font-size: 14px;
 }
 
 .add-problem-button {
-  padding: 12px 20px;
-  background: #111111;
-  color: #ffffff;
+  background: #171717;
+  color: white;
   border: none;
-  border-radius: 6px;
+  border-radius: 7px;
+  padding: 12px 18px;
   font-weight: 600;
   cursor: pointer;
 }
 
 .add-problem-button:hover {
-  background: #404040;
+  background: #444;
 }
 
-.teacher-problem-filters {
-  display: flex;
-  gap: 12px;
-  margin-bottom: 24px;
+/* Statistics */
+
+.problem-management-stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 18px;
+  margin-bottom: 28px;
 }
 
-.teacher-problem-filters input,
-.teacher-problem-filters select {
-  padding: 12px 14px;
-  border: 1px solid #d4d4d4;
-  border-radius: 7px;
-  background: #ffffff;
-  color: #171717;
+.problem-management-stats .admin-stat-card {
+  padding: 24px;
+  border: 1px solid #e5e5e5;
+  border-radius: 12px;
+  background: white;
+}
+
+.problem-management-stats span {
+  color: #777;
   font-size: 14px;
 }
 
-.teacher-problem-filters input {
-  width: 320px;
+.problem-management-stats h2 {
+  font-size: 30px;
+  margin: 12px 0 0;
 }
 
-.teacher-problem-list {
-  background: #ffffff;
-  border: 1px solid #e5e5e5;
-  border-radius: 10px;
-  overflow: hidden;
-}
-
-.teacher-problem-row {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 16px;
-  padding: 20px 24px;
-  border-bottom: 1px solid #eeeeee;
-}
-
-.teacher-problem-row:last-child {
-  border-bottom: none;
-}
-
-.teacher-problem-row h3 {
-  margin: 0 0 8px;
-  font-size: 16px;
-}
-
-.teacher-problem-row span {
-  color: #737373;
-  font-size: 13px;
-}
-
-.teacher-problem-actions {
-  display: flex;
-  align-items: center;
-  gap: 18px;
-}
-
-.teacher-problem-actions button {
-  padding: 8px 16px;
-  color: #171717;
-  background: #ffffff;
-  border: 1px solid #d4d4d4;
-  border-radius: 6px;
-  cursor: pointer;
-}
-
-.teacher-problem-actions button:hover {
-  background: #f5f5f5;
-}
-
-@media (max-width: 650px) {
-  .teacher-problems {
-    padding: 20px;
-  }
-
-  .teacher-problems-header {
-    align-items: flex-start;
-    flex-direction: column;
-  }
-
-  .teacher-problem-filters {
-    flex-direction: column;
-  }
-
-  .teacher-problem-filters input {
-    width: 100%;
-  }
-
-  .teacher-problem-row {
-    align-items: flex-start;
-    flex-direction: column;
-  }
-}
-
-
-.delete-problem-button {
-  background: #ffffff;
-  color: #b42318;
-  border: 1px solid #e0b4b0;
-  border-radius: 6px;
-  padding: 8px 16px;
-  font-weight: 600;
-  cursor: pointer;
-}
-
-.delete-problem-button:hover {
-  background: #fff1f0;
-  border-color: #b42318;
-}
-
+/* Form */
 
 .manage-problem-form {
-  margin: 25px 0;
-  padding: 25px;
-  background: #ffffff;
-  border: 1px solid #e5e5e5;
-  border-radius: 10px;
   display: flex;
   flex-direction: column;
   gap: 12px;
+  padding: 25px;
+  margin-bottom: 28px;
+  background: white;
+  border: 1px solid #e5e5e5;
+  border-radius: 12px;
 }
 
 .manage-problem-form h2 {
-  margin-bottom: 10px;
-  color: #111111;
+  margin: 0 0 12px;
+  font-size: 21px;
 }
 
 .manage-problem-form label {
@@ -170,42 +90,373 @@
 }
 
 .manage-problem-form input,
-.manage-problem-form select {
+.manage-problem-form select,
+.manage-problem-form textarea {
   width: 100%;
-  padding: 12px;
-  border: 1px solid #dddddd;
-  border-radius: 6px;
   box-sizing: border-box;
+  padding: 12px 14px;
+  border: 1px solid #ddd;
+  border-radius: 7px;
+  font-size: 14px;
   font-family: inherit;
+  outline: none;
+  background: white;
+}
+
+.manage-problem-form textarea {
+  min-height: 110px;
+  resize: vertical;
+}
+
+.manage-problem-form input:focus,
+.manage-problem-form select:focus,
+.manage-problem-form textarea:focus {
+  border-color: #171717;
+}
+
+.problem-form-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 12px;
+}
+
+.problem-form-actions button {
+  padding: 11px 17px;
+  border: 1px solid #ddd;
+  border-radius: 7px;
+  background: white;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.problem-form-actions .add-problem-button {
+  background: #171717;
+  color: white;
+  border-color: #171717;
+}
+
+/* Problem List */
+
+.problem-list-container {
+  padding: 25px;
+  background: white;
+  border: 1px solid #e5e5e5;
+  border-radius: 12px;
+}
+
+.problem-list-heading {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 22px;
+}
+
+.problem-list-heading h2 {
+  font-size: 21px;
+  margin: 0 0 8px;
+}
+
+/* Filters */
+
+.teacher-problem-filters {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr auto;
+  gap: 12px;
+  margin-bottom: 22px;
+}
+
+.teacher-problem-filters input,
+.teacher-problem-filters select,
+.teacher-problem-filters button {
+  min-width: 0;
+  padding: 11px 12px;
+  border: 1px solid #ddd;
+  border-radius: 7px;
+  background: white;
+  font-size: 13px;
+}
+
+.teacher-problem-filters button {
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.teacher-problem-filters button:hover {
+  background: #eee;
+}
+
+/* Problem Rows */
+
+.teacher-problem-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.teacher-problem-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+  padding: 22px 12px;
+  border-top: 1px solid #eee;
+}
+
+.problem-main-info {
+  min-width: 0;
+}
+
+.problem-main-info h3 {
+  display: inline-block;
+  margin: 0 12px 10px 0;
+  font-size: 17px;
+}
+
+.problem-main-info > span {
+  display: inline-block;
+  padding: 5px 9px;
+  margin-right: 7px;
+  border-radius: 5px;
+  background: #eee;
+  color: #444;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.problem-main-info p {
+  color: #777;
+  font-size: 13px;
+  margin: 5px 0 10px;
+}
+
+.problem-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+}
+
+.problem-tags span {
+  padding: 5px 9px;
+  border: 1px solid #e5e5e5;
+  border-radius: 5px;
+  color: #555;
+  font-size: 12px;
 }
 
 .teacher-problem-actions {
   display: flex;
-  align-items: center;
-  justify-content: flex-end;
-  gap: 10px;
   flex-wrap: wrap;
+  gap: 7px;
+  flex-shrink: 0;
 }
 
 .teacher-problem-actions button {
-  background: #ffffff;
-  color: #111111;
-  border: 1px solid #cccccc;
+  padding: 8px 11px;
+  border: 1px solid #ddd;
   border-radius: 6px;
-  padding: 8px 13px;
+  background: white;
+  color: #171717;
+  font-size: 12px;
   font-weight: 600;
   cursor: pointer;
 }
 
 .teacher-problem-actions button:hover {
-  background: #eeeeee;
+  background: #eee;
 }
 
-.teacher-problem-actions button:last-child {
-  color: #b42318;
-  border-color: #e0b4b0;
+/* View Modal */
+
+.problem-modal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  background: rgba(0, 0, 0, 0.55);
 }
 
-.teacher-problem-actions button:last-child:hover {
-  background: #fff1f0;
+.problem-modal {
+  position: relative;
+  width: 100%;
+  max-width: 520px;
+  padding: 30px;
+  border-radius: 12px;
+  background: white;
+  box-shadow: 0 15px 50px rgba(0, 0, 0, 0.2);
+}
+
+.problem-modal h2 {
+  margin: 0 35px 15px 0;
+  font-size: 23px;
+}
+
+.problem-modal p {
+  color: #555;
+  line-height: 1.6;
+  font-size: 14px;
+}
+
+.problem-modal-close {
+  position: absolute;
+  top: 15px;
+  right: 18px;
+  border: none;
+  background: none;
+  font-size: 27px;
+  cursor: pointer;
+}
+
+/* Responsive */
+
+@media (max-width: 900px) {
+  .teacher-problem-filters {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .teacher-problem-row {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .teacher-problem-actions {
+    width: 100%;
+  }
+}
+
+@media (max-width: 600px) {
+  .teacher-problems {
+    padding: 0 16px 35px;
+  }
+
+  .teacher-problems-header {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .problem-management-stats {
+    grid-template-columns: 1fr;
+  }
+
+  .teacher-problem-filters {
+    grid-template-columns: 1fr;
+  }
+
+  .problem-list-container {
+    padding: 16px;
+  }
+
+  .problem-form-actions {
+    flex-wrap: wrap;
+  }
+}
+
+
+.delete-modal {
+  max-width: 430px;
+}
+
+.delete-modal h2 {
+  margin-bottom: 15px;
+}
+
+.delete-modal p {
+  line-height: 1.6;
+}
+
+.confirm-delete-button {
+  background: #171717 !important;
+  color: white !important;
+  border-color: #171717 !important;
+}
+
+.confirm-delete-button:hover {
+  background: #444 !important;
+}
+
+
+/* Test Case Manager */
+
+.test-case-manager {
+  margin-top: 28px;
+  padding: 22px;
+  border: 1px solid #dedede;
+  border-radius: 10px;
+}
+
+.test-case-manager-header,
+.test-case-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 18px;
+}
+
+.test-case-manager-header h3 {
+  margin: 0 0 6px;
+}
+
+.test-case-manager-header p {
+  color: #777;
+  margin: 0;
+}
+
+.test-case-card {
+  border: 1px solid #e1e1e1;
+  border-radius: 8px;
+  padding: 18px;
+  margin-top: 15px;
+}
+
+.test-case-card-header h4 {
+  margin: 0;
+}
+
+.test-case-card-header button {
+  color: #c62828;
+  border: 1px solid #e0baba;
+  background: white;
+  border-radius: 6px;
+  padding: 8px 12px;
+  cursor: pointer;
+}
+
+.test-case-card-header button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.test-case-count {
+  margin-top: 15px;
+  color: #666;
+  font-size: 14px;
+}
+
+.problem-modal-test-cases {
+  margin-top: 22px;
+}
+
+.problem-modal-test-cases h3 {
+  margin-bottom: 12px;
+}
+
+.problem-modal-test-cases pre,
+.problem-modal pre {
+  background: #f5f5f5;
+  padding: 12px;
+  border-radius: 6px;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+
+.test-case-error {
+  color: #c62828;
+  background: #fff3f3;
+  border: 1px solid #efcaca;
+  border-radius: 6px;
+  padding: 12px;
+  margin-top: 12px;
+  font-size: 14px;
 }
