@@ -1,0 +1,108 @@
+
+.student-progress {
+  max-width: 1200px;
+  margin: 40px auto;
+  padding: 0 30px;
+  color: #171717;
+}
+
+.progress-header {
+  margin-bottom: 32px;
+}
+
+.progress-label {
+  color: #888;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 2px;
+}
+
+.progress-header h1 {
+  font-size: 32px;
+  margin: 12px 0;
+}
+
+.progress-header p:last-child {
+  color: #777;
+}
+
+.progress-stats {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 18px;
+  margin-bottom: 30px;
+}
+
+.progress-stat-card {
+  padding: 25px;
+  border: 1px solid #e5e5e5;
+  border-radius: 12px;
+  background: white;
+}
+
+.progress-stat-card span {
+  color: #777;
+  font-size: 14px;
+}
+
+.progress-stat-card h2 {
+  font-size: 30px;
+  margin: 15px 0 0;
+}
+
+.difficulty-section {
+  padding: 28px;
+  border: 1px solid #e5e5e5;
+  border-radius: 12px;
+  background: white;
+}
+
+.difficulty-section h2 {
+  font-size: 20px;
+  margin: 0 0 28px;
+}
+
+.difficulty-item {
+  margin-bottom: 25px;
+}
+
+.difficulty-info {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
+  font-size: 14px;
+}
+
+.difficulty-info span {
+  color: #777;
+}
+
+.progress-track {
+  height: 10px;
+  background: #ededed;
+  border-radius: 20px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  background: #171717;
+  border-radius: 20px;
+}
+
+@media (max-width: 768px) {
+  .progress-stats {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 480px) {
+  .progress-stats {
+    grid-template-columns: 1fr;
+  }
+
+  .student-progress {
+    padding: 0 16px;
+  }
+}
+

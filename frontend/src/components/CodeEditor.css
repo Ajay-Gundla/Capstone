@@ -1,25 +1,35 @@
+
 .code-editor {
-  background: #111827;
-  border: 1px solid #374151;
-  border-radius: 8px;
+  background: #171717;
+  border: 1px solid #333333;
+  border-radius: 10px;
   overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
 }
 
 .editor-toolbar {
-  height: 48px;
+  min-height: 52px;
   display: flex;
   align-items: center;
-  padding: 0 12px;
-  background: #1f2937;
-  border-bottom: 1px solid #374151;
+  padding: 0 14px;
+  background: #ffffff;
+  border-bottom: 1px solid #e5e5e5;
+  gap: 12px;
 }
 
 .editor-toolbar select {
-  padding: 7px 12px;
-  background: #111827;
-  color: white;
-  border: 1px solid #374151;
-  border-radius: 5px;
+  padding: 8px 12px;
+  background: #ffffff;
+  color: #171717;
+  border: 1px solid #d4d4d4;
+  border-radius: 6px;
+  font-size: 13px;
+  cursor: pointer;
+  outline: none;
+}
+
+.editor-toolbar select:focus {
+  border-color: #737373;
 }
 
 .editor-actions {
@@ -29,26 +39,53 @@
 }
 
 .editor-actions button {
-  padding: 8px 16px;
-  border: none;
-  border-radius: 5px;
-  color: white;
+  padding: 9px 17px;
+  border: 1px solid #171717;
+  border-radius: 6px;
+  color: #ffffff;
+  background: #171717;
   cursor: pointer;
+  font-size: 13px;
   font-weight: 600;
+  transition: 0.2s ease;
+}
+
+.editor-actions button:hover {
+  background: #404040;
+  border-color: #404040;
+}
+
+.editor-actions button:active {
+  transform: scale(0.97);
 }
 
 .run-button {
-  background: #16a34a;
+  background: #ffffff !important;
+  color: #171717 !important;
+  border: 1px solid #d4d4d4 !important;
 }
 
 .run-button:hover {
-  background: #15803d;
+  background: #e5e5e5 !important;
 }
 
 .submit-button {
-  background: #2563eb;
+  background: #171717 !important;
+  color: #ffffff !important;
 }
 
 .submit-button:hover {
-  background: #1d4ed8;
+  background: #404040 !important;
+}
+
+@media (max-width: 500px) {
+  .editor-toolbar {
+    padding: 8px;
+    flex-wrap: wrap;
+    height: auto;
+  }
+
+  .editor-actions {
+    gap: 6px;
+  }
 }

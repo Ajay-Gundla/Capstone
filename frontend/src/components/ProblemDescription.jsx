@@ -1,51 +1,70 @@
+
+import { useEffect, useState } from 'react'
+import axios from 'axios'
 import './ProblemDescription.css'
-function ProblemDescription() {
+
+function ProblemDescription({ problemSlug }) {
+  const [problem, setProblem] = useState(null)
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState('')
+
+  useEffect(() => {
+    const fetchProblem = async () => {
+      try {
+        setLoading(true)
+        setError('')
+
+        const token = localStorage.getItem('token')
+
+        const response = await axios.get(
+          `http://localhost:5001/api/problems/${problemSlug}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`
+            }
+          }
+        )
+
+        setProblem(response.data)
+      } catch (err) {
+        setError('Failed to load problem')
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    fetchProblem()
+  }, [problemSlug])
+
+  if (loading) return <p>Loading problem...</p>
+  if (error) return <p>{error}</p>
+  if (!problem) return <p>Problem not found</p>
+
   return (
     <div className="problem-description">
-      <h2>Two Sum</h2>
+      <h2>{problem.title}</h2>
 
       <div className="problem-meta">
-        <span className="easy">Easy</span>
-        <span>Array</span>
-        <span>Hash Table</span>
+        <span>{problem.difficulty}</span>
       </div>
 
       <h3>Problem</h3>
+      <p>{problem.description}</p>
 
-      <p>
-        Given an array of integers nums and an integer target,
-        return the indices of the two numbers such that they add
-        up to target.
-      </p>
+      {problem.examples.map((example) => (
+        <div key={example.example_number}>
+          <h3>Example {example.example_number}</h3>
 
-      <p>
-        You may assume that each input has exactly one solution,
-        and you may not use the same element twice.
-      </p>
-
-      <h3>Example 1</h3>
-
-      <pre>
-{`Input: nums = [2,7,11,15], target = 9
-Output: [0,1]
-Explanation: nums[0] + nums[1] == 9`}
-      </pre>
-
-      <h3>Example 2</h3>
-
-      <pre>
-{`Input: nums = [3,2,4], target = 6
-Output: [1,2]`}
-      </pre>
+          <div className="example-box">
+            <p>Input: {example.input}</p>
+            <p>Output: {example.expected_output}</p>
+            <p>Explanation: {example.explanation}</p>
+          </div>
+        </div>
+      ))}
 
       <h3>Constraints</h3>
-
-      <ul>
-        <li>2 ≤ nums.length ≤ 10⁴</li>
-        <li>-10⁹ ≤ nums[i] ≤ 10⁹</li>
-        <li>-10⁹ ≤ target ≤ 10⁹</li>
-        <li>Only one valid answer exists.</li>
-      </ul>
+      <p>{problem.constraints}</p>
     </div>
   )
 }
