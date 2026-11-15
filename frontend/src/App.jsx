@@ -27,6 +27,7 @@ function App() {
     localStorage.removeItem('user')
     setUser(null)
     setShowRegister(false)
+    setActivePage('Dashboard')
   }
 
   if (!user) {
@@ -35,12 +36,10 @@ function App() {
         {showRegister ? (
           <>
             <Register
-  onLogin={setUser}
-  onShowLogin={() => setShowRegister(false)}
-/>
-
+              onLogin={setUser}
+              onShowLogin={() => setShowRegister(false)}
+            />
             <p>Already have an account?</p>
-
             <button onClick={() => setShowRegister(false)}>
               Login
             </button>
@@ -66,11 +65,16 @@ function App() {
 
       {activePage === 'Dashboard' && (
         user.role === 'admin' ? (
-          <AdminDashboard user={user} />
+          <AdminDashboard
+            user={user}
+            setActivePage={setActivePage}
+          />
         ) : user.role === 'teacher' ? (
           <TeacherDashboard user={user} />
         ) : (
-          <StudentWorkspace problemSlug={selectedProblem} />
+          <StudentProgress
+            onViewAllSubmissions={() => setActivePage('Submissions')}
+          />
         )
       )}
 
@@ -78,9 +82,10 @@ function App() {
         <UserManagement />
       )}
 
-      {activePage === 'Manage Problems' && user.role === 'teacher' && (
-        <TeacherProblems />
-      )}
+      {activePage === 'Manage Problems' &&
+        (user.role === 'teacher' || user.role === 'admin') && (
+          <TeacherProblems />
+        )}
 
       {activePage === 'Problems' && (
         <ProblemList
@@ -96,11 +101,14 @@ function App() {
       )}
 
       {activePage === 'Progress' && user.role === 'student' && (
-  <StudentProgress />
-)}
+        <StudentProgress
+          onViewAllSubmissions={() => setActivePage('Submissions')}
+        />
+      )}
+
       {activePage === 'Submissions' && user.role === 'student' && (
-  <SubmissionHistory />
-)}
+        <SubmissionHistory />
+      )}
     </>
   )
 }
