@@ -100,6 +100,11 @@ function App() {
         <StudentWorkspace problemSlug={selectedProblem} />
       )}
 
+      {activePage === 'Progress' && (
+        <h2 style={{ textAlign: 'center' }}>
+          Progress page coming soon
+        </h2>
+      )}
       {activePage === 'Progress' && user.role === 'student' && (
         <StudentProgress
           onViewAllSubmissions={() => setActivePage('Submissions')}

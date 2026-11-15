@@ -322,6 +322,11 @@ function TeacherProblems() {
           <p>Create, search, review and manage coding problems.</p>
         </div>
 
+        <button className="add-problem-button">
+          + Create Problem
+        </button>
+      </div>
+
         <button
           className="add-problem-button"
           onClick={() => {

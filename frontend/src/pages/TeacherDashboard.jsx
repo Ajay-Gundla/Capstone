@@ -30,6 +30,9 @@ function TeacherDashboard({ user }) {
   }
 
   const handleTestCaseChange = (index, field, value) => {
+    const updatedTestCases = [...testCases]
+    updatedTestCases[index][field] = value
+    setTestCases(updatedTestCases)
     const updated = [...testCases]
     updated[index][field] = value
     setTestCases(updated)
@@ -45,6 +48,9 @@ function TeacherDashboard({ user }) {
   const removeTestCase = (index) => {
     if (testCases.length === 1) return
 
+    setTestCases(
+      testCases.filter((_, i) => i !== index)
+    )
     setTestCases(testCases.filter((_, i) => i !== index))
   }
 
@@ -59,6 +65,9 @@ function TeacherDashboard({ user }) {
       exampleOutput: ''
     })
 
+    setTestCases([
+      { input: '', expectedOutput: '' }
+    ])
     setTestCases([{ input: '', expectedOutput: '' }])
     setEditingId(null)
   }
@@ -66,6 +75,16 @@ function TeacherDashboard({ user }) {
   const handleCreateProblem = (e) => {
     e.preventDefault()
 
+    const newProblem = {
+      ...form,
+      id: Date.now(),
+      status: 'Draft',
+      testCases: testCases
+    }
+
+    setProblems([...problems, newProblem])
+    setShowForm(false)
+    resetForm()
     if (editingId !== null) {
       setProblems(problems.map((problem) =>
         problem.id === editingId
@@ -129,11 +148,13 @@ function TeacherDashboard({ user }) {
 
         <div className="stat-card">
           <span>Published Problems</span>
+          <h2>0</h2>
           <h2>{problems.filter(p => p.status === 'Published').length}</h2>
         </div>
 
         <div className="stat-card">
           <span>Draft Problems</span>
+          <h2>{problems.length}</h2>
           <h2>{problems.filter(p => p.status === 'Draft').length}</h2>
         </div>
       </div>
@@ -146,6 +167,7 @@ function TeacherDashboard({ user }) {
 
         <button
           className="create-problem-button"
+          onClick={() => setShowForm(!showForm)}
           onClick={() => {
             if (showForm) {
               handleCancel()
@@ -161,6 +183,7 @@ function TeacherDashboard({ user }) {
 
       {showForm && (
         <section className="create-problem-form">
+          <h2>Create New Problem</h2>
           <h2>{editingId !== null ? 'Edit Problem' : 'Create New Problem'}</h2>
 
           <form onSubmit={handleCreateProblem}>
@@ -272,6 +295,11 @@ function TeacherDashboard({ user }) {
               </button>
             </div>
 
+            <button
+              type="submit"
+              className="create-problem-button"
+            >
+              Save as Draft
             <button type="submit" className="create-problem-button">
               {editingId !== null ? 'Save Changes' : 'Save as Draft'}
             </button>
@@ -296,6 +324,7 @@ function TeacherDashboard({ user }) {
                 </p>
               </div>
 
+              <span>{problem.status}</span>
               <div className="problem-actions">
   <span>{problem.status}</span>
 
