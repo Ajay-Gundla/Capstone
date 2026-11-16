@@ -5,6 +5,7 @@ import StudentWorkspace from './pages/StudentWorkspace'
 import Login from './pages/Login'
 import Register from './pages/register'
 import ProblemList from './components/ProblemList'
+import LearningPath from './components/LearningPath'
 import TeacherDashboard from './pages/TeacherDashboard'
 import AdminDashboard from './pages/AdminDashboard'
 import UserManagement from './pages/UserManagement'
@@ -63,6 +64,7 @@ function App() {
         user={user}
       />
 
+      {/* Dashboard */}
       {activePage === 'Dashboard' && (
         user.role === 'admin' ? (
           <AdminDashboard
@@ -78,16 +80,19 @@ function App() {
         )
       )}
 
+      {/* Admin: Manage Users */}
       {activePage === 'Manage Users' && user.role === 'admin' && (
         <UserManagement />
       )}
 
+      {/* Teacher/Admin: Manage Problems */}
       {activePage === 'Manage Problems' &&
         (user.role === 'teacher' || user.role === 'admin') && (
           <TeacherProblems />
         )}
 
-      {activePage === 'Problems' && (
+      {/* Student: Problems */}
+      {activePage === 'Problems' && user.role === 'student' && (
         <ProblemList
           onSelectProblem={(slug) => {
             setSelectedProblem(slug)
@@ -96,21 +101,24 @@ function App() {
         />
       )}
 
-      {activePage === 'Workspace' && (
+      {/* Student: Learning Path */}
+      {activePage === 'Learning Path' && user.role === 'student' && (
+        <LearningPath />
+      )}
+
+      {/* Student: Coding Workspace */}
+      {activePage === 'Workspace' && user.role === 'student' && (
         <StudentWorkspace problemSlug={selectedProblem} />
       )}
 
-      {activePage === 'Progress' && (
-        <h2 style={{ textAlign: 'center' }}>
-          Progress page coming soon
-        </h2>
-      )}
+      {/* Student: Progress */}
       {activePage === 'Progress' && user.role === 'student' && (
         <StudentProgress
           onViewAllSubmissions={() => setActivePage('Submissions')}
         />
       )}
 
+      {/* Student: Submissions */}
       {activePage === 'Submissions' && user.role === 'student' && (
         <SubmissionHistory />
       )}

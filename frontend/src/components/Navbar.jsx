@@ -3,8 +3,14 @@ import './Navbar.css'
 
 function Navbar({ activePage, setActivePage, handleLogout, user }) {
   const rolePages = {
-    student: ['Dashboard', 'Problems', 'Workspace', 'Progress'],
-    student: ['Dashboard', 'Problems', 'Workspace', 'Progress', 'Submissions'],
+    student: [
+      'Dashboard',
+      'Problems',
+      'Workspace',
+      'Learning Path',
+      'Progress',
+      'Submissions'
+    ],
     teacher: ['Dashboard', 'Manage Problems'],
     admin: ['Dashboard', 'Manage Users', 'Manage Problems'],
   }
