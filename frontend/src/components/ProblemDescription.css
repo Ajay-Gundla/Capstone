@@ -1,22 +1,54 @@
 
+/* Main Problem Description */
+
 .problem-description {
   padding: 28px;
   color: #262626;
-  background: #ffffff;
+  background: #fff;
   border: 1px solid #e5e5e5;
   border-radius: 12px;
   line-height: 1.8;
   text-align: left;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  box-sizing: border-box;
 }
 
+/* Problem Title */
+
 .problem-description h2 {
-  color: #111111;
+  color: #111;
   font-size: 25px;
   font-weight: 700;
   margin: 0 0 16px;
   letter-spacing: -0.5px;
+  line-height: 1.35;
+  overflow-wrap: anywhere;
 }
+
+/* Difficulty */
+
+.problem-meta {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 24px;
+  color: #737373;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.problem-meta span {
+  display: inline-flex;
+  align-items: center;
+  padding: 5px 12px;
+  background: #f5f5f5;
+  border: 1px solid #e5e5e5;
+  border-radius: 20px;
+  color: #525252;
+}
+
+/* Section Headings */
 
 .problem-description h3 {
   color: #171717;
@@ -24,24 +56,51 @@
   font-weight: 650;
   margin-top: 28px;
   margin-bottom: 12px;
+  line-height: 1.4;
 }
 
-.problem-meta {
-  display: flex;
-  gap: 12px;
-  margin-bottom: 24px;
-  color: #737373;
-  font-size: 14px;
+.problem-description h3:first-of-type {
+  margin-top: 20px;
 }
+
+/* Problem Text */
 
 .problem-description p {
   color: #404040;
   font-size: 14px;
   line-height: 1.8;
+  margin: 10px 0;
+  overflow-wrap: anywhere;
 }
 
-.problem-description pre,
+/* Examples */
+
 .problem-description .example-box {
+  padding: 16px;
+  margin: 12px 0 20px;
+  background: #f8f8f8;
+  border: 1px solid #e5e5e5;
+  border-radius: 8px;
+  overflow-x: auto;
+  color: #262626;
+}
+
+.problem-description .example-box p {
+  margin: 7px 0;
+  font-family: monospace;
+  font-size: 13px;
+  line-height: 1.7;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.problem-description .example-box p:last-child {
+  margin-bottom: 0;
+}
+
+/* Code Blocks */
+
+.problem-description pre {
   padding: 16px;
   background: #f5f5f5;
   border: 1px solid #e5e5e5;
@@ -49,13 +108,63 @@
   overflow-x: auto;
   white-space: pre-wrap;
   color: #262626;
+  font-family: monospace;
+  font-size: 13px;
+  line-height: 1.7;
 }
 
-.problem-description ul {
+/* Lists */
+
+.problem-description ul,
+.problem-description ol {
   padding-left: 24px;
   color: #404040;
 }
 
 .problem-description li {
   margin-bottom: 8px;
+  font-size: 14px;
+  line-height: 1.7;
+}
+
+/* Tablet */
+
+@media (max-width: 1024px) {
+  .problem-description {
+    padding: 22px;
+  }
+
+  .problem-description h2 {
+    font-size: 23px;
+  }
+}
+
+/* Mobile */
+
+@media (max-width: 600px) {
+  .problem-description {
+    padding: 18px;
+    border-radius: 9px;
+  }
+
+  .problem-description h2 {
+    font-size: 21px;
+  }
+
+  .problem-description h3 {
+    font-size: 16px;
+    margin-top: 22px;
+  }
+
+  .problem-description p {
+    font-size: 13px;
+  }
+
+  .problem-description .example-box {
+    padding: 12px;
+  }
+
+  .problem-description .example-box p {
+    font-size: 12px;
+  }
 }
