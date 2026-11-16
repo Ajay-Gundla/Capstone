@@ -1,12 +1,17 @@
 
+/* Main container */
+
 .student-progress {
+  width: 100%;
   max-width: 1200px;
   margin: 40px auto;
   padding: 0 30px 40px;
+  box-sizing: border-box;
   color: #171717;
 }
 
 /* Header */
+
 .progress-header {
   margin-bottom: 32px;
 }
@@ -16,10 +21,12 @@
   font-size: 12px;
   font-weight: 700;
   letter-spacing: 2px;
+  margin-bottom: 8px;
 }
 
 .progress-header h1 {
   font-size: 32px;
+  font-weight: 700;
   margin: 12px 0;
   letter-spacing: -0.8px;
 }
@@ -30,6 +37,7 @@
 }
 
 /* Statistics */
+
 .progress-stats {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
@@ -57,6 +65,7 @@
 }
 
 .progress-stat-card h2 {
+  color: #171717;
   font-size: 32px;
   font-weight: 700;
   letter-spacing: -1px;
@@ -64,6 +73,7 @@
 }
 
 /* Common sections */
+
 .difficulty-section,
 .activity-section,
 .recent-activity-section {
@@ -84,6 +94,7 @@
 }
 
 /* Difficulty progress */
+
 .difficulty-item {
   margin-bottom: 25px;
 }
@@ -95,6 +106,8 @@
 .difficulty-info {
   display: flex;
   justify-content: space-between;
+  align-items: center;
+  gap: 12px;
   margin-bottom: 10px;
   font-size: 13px;
 }
@@ -108,6 +121,7 @@
 }
 
 .progress-track {
+  width: 100%;
   height: 9px;
   background: #ededed;
   border-radius: 20px;
@@ -122,6 +136,7 @@
 }
 
 /* Activity heading */
+
 .activity-heading {
   display: flex;
   justify-content: space-between;
@@ -147,6 +162,7 @@
 }
 
 /* Heatmap */
+
 .heatmap-wrapper {
   display: flex;
   align-items: flex-start;
@@ -155,6 +171,7 @@
   overflow-x: auto;
   padding: 8px 0 12px;
   box-sizing: border-box;
+  scrollbar-width: thin;
 }
 
 .heatmap-days {
@@ -176,7 +193,7 @@
   grid-auto-flow: column;
   grid-auto-columns: 16px;
   gap: 6px;
-  flex: 1;
+  flex: 0 0 auto;
   width: max-content;
 }
 
@@ -194,19 +211,38 @@
 }
 
 /* Heatmap levels */
-.level-0 { background: #ebedf0; }
-.level-1 { background: #c6c6c6; }
-.level-2 { background: #929292; }
-.level-3 { background: #666666; }
-.level-4 { background: #3d3d3d; }
-.level-5 { background: #171717; }
 
-/* Legend */
+.level-0 {
+  background: #ebedf0;
+}
+
+.level-1 {
+  background: #c6c6c6;
+}
+
+.level-2 {
+  background: #929292;
+}
+
+.level-3 {
+  background: #666666;
+}
+
+.level-4 {
+  background: #3d3d3d;
+}
+
+.level-5 {
+  background: #171717;
+}
+
+/* Heatmap legend */
+
 .heatmap-legend {
   display: flex;
   align-items: center;
   justify-content: flex-end;
-  gap: 7px;
+  gap: 6px;
   margin-top: 20px;
   font-size: 11px;
   color: #777;
@@ -218,18 +254,8 @@
   border-radius: 3px;
 }
 
-/* Heatmap legend */
-.heatmap-legend {
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-  gap: 6px;
-  margin-top: 20px;
-  font-size: 11px;
-  color: #777;
-}
-
 /* Recent activity */
+
 .recent-activity-header {
   display: flex;
   justify-content: space-between;
@@ -270,6 +296,7 @@
   width: 12px;
   display: flex;
   justify-content: center;
+  flex-shrink: 0;
 }
 
 .activity-dot {
@@ -279,9 +306,17 @@
   background: #777;
 }
 
-.activity-dot.accepted { background: #222; }
-.activity-dot.wrong-answer { background: #999; }
-.activity-dot.runtime-error { background: #555; }
+.activity-dot.accepted {
+  background: #222;
+}
+
+.activity-dot.wrong-answer {
+  background: #999;
+}
+
+.activity-dot.runtime-error {
+  background: #555;
+}
 
 .recent-activity-details {
   flex: 1;
@@ -323,10 +358,50 @@
   color: #333;
 }
 
-/* Responsive */
+/* View all submissions button */
+
+.view-all-submissions {
+  background: #171717;
+  color: #fff;
+  border: 1px solid #171717;
+  border-radius: 7px;
+  padding: 10px 15px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.view-all-submissions:hover {
+  background: #404040;
+  transform: translateY(-1px);
+}
+
+.view-all-submissions:focus-visible {
+  outline: 2px solid #777;
+  outline-offset: 3px;
+}
+
+/* Empty state */
+
+.no-attempts {
+  color: #777;
+  font-size: 14px;
+  text-align: center;
+  padding: 25px 10px;
+}
+
+/* Tablet */
+
 @media (max-width: 900px) {
   .progress-stats {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .student-progress {
+    padding-left: 22px;
+    padding-right: 22px;
   }
 }
 
@@ -338,7 +413,15 @@
   .activity-heading {
     flex-direction: column;
   }
+
+  .difficulty-section,
+  .activity-section,
+  .recent-activity-section {
+    padding: 22px;
+  }
 }
+
+/* Mobile */
 
 @media (max-width: 480px) {
   .student-progress {
@@ -359,6 +442,11 @@
     padding: 18px;
   }
 
+  .recent-activity-header {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
   .recent-activity-item {
     gap: 10px;
     flex-wrap: wrap;
@@ -367,29 +455,12 @@
   .activity-verdict {
     margin-left: auto;
   }
-}
 
+  .view-all-submissions {
+    width: 100%;
+  }
 
-.view-all-submissions {
-  background: #171717;
-  color: white;
-  border: 1px solid #171717;
-  border-radius: 7px;
-  padding: 10px 15px;
-  font-size: 12px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: background 0.2s ease;
-}
-
-.view-all-submissions:hover {
-  background: #404040;
-}
-
-@media (max-width: 480px) {
-  .recent-activity-header {
-    align-items: flex-start;
-    flex-direction: column;
+  .heatmap-legend {
+    justify-content: flex-start;
   }
 }
-

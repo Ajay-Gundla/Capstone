@@ -3,7 +3,43 @@ import { useEffect, useState } from 'react'
 import Editor from '@monaco-editor/react'
 import './CodeEditor.css'
 
-const starterCode = 'def twoSum(nums, target):\n    pass'
+const starterCodes = {
+  python: `def solution():
+    pass
+
+
+if __name__ == "__main__":
+    solution()`,
+
+  javascript: `function solution() {
+    
+}
+
+solution();`,
+
+  cpp: `#include <bits/stdc++.h>
+using namespace std;
+
+int main() {
+    
+    return 0;
+}`,
+
+  java: `import java.util.*;
+
+public class Main {
+    public static void main(String[] args) {
+        
+    }
+}`
+}
+
+const languages = [
+  { value: 'python', label: 'Python' },
+  { value: 'javascript', label: 'JavaScript' },
+  { value: 'cpp', label: 'C++' },
+  { value: 'java', label: 'Java' }
+]
 
 function CodeEditor({
   problemSlug,
@@ -15,46 +51,78 @@ function CodeEditor({
   const storageKey = `algopilot_code_${problemSlug || 'default'}`
 
   const [language, setLanguage] = useState('python')
-  const [code, setCode] = useState(starterCode)
+
+  // Each language maintains its own code.
+  const [drafts, setDrafts] = useState(starterCodes)
+
   const [lastSaved, setLastSaved] = useState('')
   const [isSaved, setIsSaved] = useState(false)
   const [isFullscreen, setIsFullscreen] = useState(false)
   const [fontSize, setFontSize] = useState(14)
+  const [isLoaded, setIsLoaded] = useState(false)
 
+  const code = drafts[language] ?? starterCodes[language]
+
+  // Load previously saved drafts.
   useEffect(() => {
+    setIsLoaded(false)
+
     try {
-      const saved = JSON.parse(localStorage.getItem(storageKey))
-      setLanguage(saved?.language || 'python')
-      setCode(saved?.code ?? starterCode)
-      setLastSaved(saved?.savedAt || '')
-      setIsSaved(Boolean(saved?.savedAt))
-    } catch {
+      const saved = JSON.parse(
+        localStorage.getItem(storageKey) || 'null'
+      )
+
+      if (saved) {
+        const savedDrafts = {
+          ...starterCodes,
+          ...(saved.drafts || {})
+        }
+
+        // Support drafts saved by the previous editor version.
+        if (saved.code && saved.language) {
+          savedDrafts[saved.language] = saved.code
+        }
+
+        setDrafts(savedDrafts)
+        setLanguage(saved.language || 'python')
+        setLastSaved(saved.savedAt || '')
+        setIsSaved(Boolean(saved.savedAt))
+      } else {
+        setDrafts(starterCodes)
+        setLanguage('python')
+        setLastSaved('')
+        setIsSaved(false)
+      }
+    } catch (error) {
+      console.error('Unable to load saved code:', error)
+      setDrafts(starterCodes)
       setLanguage('python')
-      setCode(starterCode)
       setLastSaved('')
       setIsSaved(false)
     }
+
+    setIsLoaded(true)
   }, [storageKey])
 
+  // Automatically save drafts for every language.
   useEffect(() => {
-    try {
-      const existing = JSON.parse(
-        localStorage.getItem(storageKey) || '{}'
-      )
+    if (!isLoaded) return
 
+    try {
       localStorage.setItem(
         storageKey,
         JSON.stringify({
-          code,
+          drafts,
           language,
-          savedAt: existing.savedAt || ''
+          savedAt: lastSaved
         })
       )
     } catch (error) {
       console.error('Unable to autosave code:', error)
     }
-  }, [storageKey, code, language])
+  }, [storageKey, drafts, language, lastSaved, isLoaded])
 
+  // Close fullscreen using Escape.
   useEffect(() => {
     const handleKeyDown = (event) => {
       if (event.key === 'Escape') {
@@ -69,37 +137,58 @@ function CodeEditor({
     }
   }, [])
 
+  // Update code without affecting other languages.
+  const handleCodeChange = (value) => {
+    setDrafts((previous) => ({
+      ...previous,
+      [language]: value || ''
+    }))
+
+    setIsSaved(false)
+  }
+
+  // Change language and restore its previous draft.
+  const handleLanguageChange = (newLanguage) => {
+    setLanguage(newLanguage)
+    setIsSaved(false)
+  }
+
+  // Manually save the current draft.
   const handleSaveDraft = () => {
     const savedAt = new Date().toLocaleString()
 
     localStorage.setItem(
       storageKey,
-      JSON.stringify({ code, language, savedAt })
+      JSON.stringify({
+        drafts,
+        language,
+        savedAt
+      })
     )
 
     setLastSaved(savedAt)
     setIsSaved(true)
   }
 
+  // Reset current language code.
   const handleReset = () => {
-    setCode(starterCode)
+    setDrafts((previous) => ({
+      ...previous,
+      [language]: starterCodes[language]
+    }))
+
     setIsSaved(false)
-    setLastSaved('')
   }
 
+  // Restore the original starter template.
   const handleRestoreStarter = () => {
-    setCode(starterCode)
-    setIsSaved(false)
-    setLastSaved('')
+    setDrafts((previous) => ({
+      ...previous,
+      [language]: starterCodes[language]
+    }))
 
-    localStorage.setItem(
-      storageKey,
-      JSON.stringify({
-        code: starterCode,
-        language,
-        savedAt: ''
-      })
-    )
+    setLastSaved('')
+    setIsSaved(false)
   }
 
   const handleRun = () => {
@@ -124,21 +213,24 @@ function CodeEditor({
 
   return (
     <div className={`code-editor ${isFullscreen ? 'fullscreen-mode' : ''}`}>
+
+      {/* Editor Toolbar */}
       <div className="editor-toolbar">
+
         <select
           value={language}
-          onChange={(e) => {
-            setLanguage(e.target.value)
-            setIsSaved(false)
-          }}
+          onChange={(e) => handleLanguageChange(e.target.value)}
         >
-          <option value="python">Python</option>
-          <option value="javascript">JavaScript</option>
-          <option value="cpp">C++</option>
-          <option value="java">Java</option>
+          {languages.map((item) => (
+            <option key={item.value} value={item.value}>
+              {item.label}
+            </option>
+          ))}
         </select>
 
         <div className="editor-actions">
+
+          {/* Font Size */}
           <div className="font-controls">
             <button
               type="button"
@@ -167,22 +259,36 @@ function CodeEditor({
             </button>
           </div>
 
+          {/* Fullscreen */}
           <button
+            type="button"
             className="fullscreen-button"
             onClick={() => setIsFullscreen((previous) => !previous)}
           >
             {isFullscreen ? 'Exit Fullscreen' : 'Fullscreen'}
           </button>
 
-          <button className="reset-button" onClick={handleReset}>
+          {/* Reset */}
+          <button
+            type="button"
+            className="reset-button"
+            onClick={handleReset}
+          >
             Reset Code
           </button>
 
-          <button className="save-draft-button" onClick={handleSaveDraft}>
+          {/* Save */}
+          <button
+            type="button"
+            className="save-draft-button"
+            onClick={handleSaveDraft}
+          >
             Save Draft
           </button>
 
+          {/* Run */}
           <button
+            type="button"
             className="run-button"
             onClick={handleRun}
             disabled={isRunning || isSubmitting}
@@ -190,36 +296,51 @@ function CodeEditor({
             {isRunning ? 'Running...' : 'Run Code'}
           </button>
 
+          {/* Submit */}
           <button
+            type="button"
             className="submit-button"
             onClick={handleSubmit}
             disabled={isRunning || isSubmitting}
           >
             {isSubmitting ? 'Submitting...' : 'Submit'}
           </button>
+
         </div>
       </div>
 
+      {/* Monaco Editor */}
       <Editor
         height={isFullscreen ? 'calc(100vh - 120px)' : '500px'}
         language={language}
         theme="vs-dark"
         value={code}
-        onChange={(value) => {
-          setCode(value || '')
-          setIsSaved(false)
-        }}
+        onChange={handleCodeChange}
         options={{
           minimap: { enabled: false },
-          fontSize: fontSize,
+          fontSize,
           automaticLayout: true,
-          scrollBeyondLastLine: false
+          scrollBeyondLastLine: false,
+          tabSize: 4,
+          wordWrap: 'on',
+          padding: {
+            top: 12
+          },
+          suggestOnTriggerCharacters: true,
+          quickSuggestions: true
         }}
       />
 
+      {/* Draft Information */}
       <div className="draft-save-info">
-        <span>{isSaved ? '✓ Saved' : 'Unsaved changes'}</span>
-        <span>Language: {language.toUpperCase()}</span>
+
+        <span>
+          {isSaved ? '✓ Saved' : 'Unsaved changes'}
+        </span>
+
+        <span>
+          Language: {language.toUpperCase()}
+        </span>
 
         <span>
           {lastSaved
@@ -233,6 +354,7 @@ function CodeEditor({
         >
           Restore Starter Code
         </button>
+
       </div>
     </div>
   )

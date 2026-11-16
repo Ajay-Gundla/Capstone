@@ -1,4 +1,3 @@
-
 import { useState } from 'react'
 import Navbar from './components/Navbar'
 import StudentWorkspace from './pages/StudentWorkspace'
@@ -21,37 +20,29 @@ function App() {
 
   const [showRegister, setShowRegister] = useState(false)
   const [activePage, setActivePage] = useState('Dashboard')
-  const [selectedProblem, setSelectedProblem] = useState('two-sum')
+  const [selectedProblem, setSelectedProblem] = useState(null)
 
   const handleLogout = () => {
     localStorage.removeItem('token')
     localStorage.removeItem('user')
+
     setUser(null)
     setShowRegister(false)
     setActivePage('Dashboard')
+    setSelectedProblem(null)
   }
 
   if (!user) {
-    return (
-      <div>
-        {showRegister ? (
-          <>
-            <Register
-              onLogin={setUser}
-              onShowLogin={() => setShowRegister(false)}
-            />
-            <p>Already have an account?</p>
-            <button onClick={() => setShowRegister(false)}>
-              Login
-            </button>
-          </>
-        ) : (
-          <Login
-            onLogin={setUser}
-            onShowRegister={() => setShowRegister(true)}
-          />
-        )}
-      </div>
+    return showRegister ? (
+      <Register
+        onLogin={setUser}
+        onShowLogin={() => setShowRegister(false)}
+      />
+    ) : (
+      <Login
+        onLogin={setUser}
+        onShowRegister={() => setShowRegister(true)}
+      />
     )
   }
 
@@ -64,7 +55,6 @@ function App() {
         user={user}
       />
 
-      {/* Dashboard */}
       {activePage === 'Dashboard' && (
         user.role === 'admin' ? (
           <AdminDashboard
@@ -80,18 +70,15 @@ function App() {
         )
       )}
 
-      {/* Admin: Manage Users */}
       {activePage === 'Manage Users' && user.role === 'admin' && (
         <UserManagement />
       )}
 
-      {/* Teacher/Admin: Manage Problems */}
       {activePage === 'Manage Problems' &&
         (user.role === 'teacher' || user.role === 'admin') && (
           <TeacherProblems />
         )}
 
-      {/* Student: Problems */}
       {activePage === 'Problems' && user.role === 'student' && (
         <ProblemList
           onSelectProblem={(slug) => {
@@ -101,24 +88,41 @@ function App() {
         />
       )}
 
-      {/* Student: Learning Path */}
       {activePage === 'Learning Path' && user.role === 'student' && (
         <LearningPath />
       )}
 
-      {/* Student: Coding Workspace */}
       {activePage === 'Workspace' && user.role === 'student' && (
-        <StudentWorkspace problemSlug={selectedProblem} />
+        selectedProblem ? (
+          <StudentWorkspace problemSlug={selectedProblem} />
+        ) : (
+          <div style={{ textAlign: 'center', padding: '80px 20px' }}>
+            <h2>No Problem Selected</h2>
+            <p>Select a coding problem before opening the workspace.</p>
+            <button
+              onClick={() => setActivePage('Problems')}
+              style={{
+                padding: '12px 20px',
+                background: '#171717',
+                color: 'white',
+                border: 'none',
+                borderRadius: '7px',
+                cursor: 'pointer',
+                marginTop: '15px'
+              }}
+            >
+              Browse Problems
+            </button>
+          </div>
+        )
       )}
 
-      {/* Student: Progress */}
       {activePage === 'Progress' && user.role === 'student' && (
         <StudentProgress
           onViewAllSubmissions={() => setActivePage('Submissions')}
         />
       )}
 
-      {/* Student: Submissions */}
       {activePage === 'Submissions' && user.role === 'student' && (
         <SubmissionHistory />
       )}

@@ -15,7 +15,7 @@
   background: #ffffff;
   padding: 40px;
   border: 1px solid #e5e5e5;
-  border-radius: 12px;
+  border-radius: 14px;
   box-shadow: 0 8px 30px rgba(0, 0, 0, 0.06);
   box-sizing: border-box;
 }
@@ -24,11 +24,17 @@
   margin: 0 0 8px;
   color: #111111;
   font-size: 28px;
+  font-weight: 700;
+}
+
+.register-card h2 span {
+  color: #555555;
 }
 
 .register-card > p {
   color: #777777;
-  margin-bottom: 28px;
+  margin: 0 0 28px;
+  line-height: 1.5;
 }
 
 .register-form {
@@ -39,42 +45,53 @@
 
 .register-form input {
   width: 100%;
-  padding: 13px;
+  padding: 14px;
   border: 1px solid #dddddd;
-  border-radius: 6px;
+  border-radius: 7px;
   font-size: 14px;
   box-sizing: border-box;
+  background: #ffffff;
+  transition: border-color 0.2s, box-shadow 0.2s;
 }
 
 .register-form input:focus {
   outline: none;
   border-color: #111111;
+  box-shadow: 0 0 0 3px rgba(17, 17, 17, 0.08);
 }
 
 .register-button {
-  padding: 13px;
+  padding: 14px;
   background: #111111;
   color: #ffffff;
   border: none;
-  border-radius: 6px;
+  border-radius: 7px;
   font-weight: 600;
+  font-size: 15px;
   cursor: pointer;
+  transition: background 0.2s, transform 0.2s;
 }
 
 .register-button:hover {
   background: #333333;
 }
 
+.register-button:active {
+  transform: scale(0.98);
+}
+
 .register-message {
-  margin-top: 15px;
+  margin: 15px 0 0;
   color: #333333;
   font-size: 14px;
+  text-align: center;
 }
 
 .register-login-link {
-  margin-top: 22px;
+  margin-top: 24px;
   text-align: center;
   color: #555555;
+  font-size: 14px;
 }
 
 .register-login-link button {
@@ -84,4 +101,23 @@
   font-weight: 600;
   cursor: pointer;
   text-decoration: underline;
+  padding: 4px;
+}
+
+.register-login-link button:hover {
+  color: #555555;
+}
+
+@media (max-width: 480px) {
+  .register-page {
+    padding: 16px;
+  }
+
+  .register-card {
+    padding: 28px 22px;
+  }
+
+  .register-card h2 {
+    font-size: 25px;
+  }
 }

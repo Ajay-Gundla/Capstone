@@ -1,7 +1,9 @@
 
+/* Main Workspace */
+
 .workspace {
   display: grid;
-  grid-template-columns: 40% 60%;
+  grid-template-columns: minmax(320px, 40%) minmax(0, 60%);
   gap: 16px;
   height: calc(100vh - 80px);
   padding: 16px;
@@ -10,14 +12,22 @@
   box-sizing: border-box;
 }
 
+/* Left Panel - Problem Description */
+
 .workspace-left {
   min-width: 0;
+  min-height: 0;
   height: 100%;
   overflow-y: auto;
+  overflow-x: hidden;
   background: #fff;
   border: 1px solid #e5e5e5;
   border-radius: 10px;
+  scrollbar-width: thin;
+  scrollbar-color: #d4d4d4 transparent;
 }
+
+/* Right Panel - Editor and Output */
 
 .workspace-right {
   display: flex;
@@ -25,12 +35,13 @@
   min-width: 0;
   min-height: 0;
   height: 100%;
-  gap: 12px;
+  gap: 14px;
   overflow-y: auto;
   overflow-x: hidden;
+  scrollbar-width: thin;
+  scrollbar-color: #d4d4d4 transparent;
 }
 
-/* Keep the editor at its full height */
 .workspace-right > * {
   flex-shrink: 0;
 }
@@ -40,6 +51,7 @@
 }
 
 /* Recent Attempts */
+
 .recent-attempts {
   flex: 0 0 auto;
   background: #fff;
@@ -47,13 +59,15 @@
   border-radius: 10px;
   overflow: hidden;
   color: #171717;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
 }
 
 .recent-attempts-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 15px 20px;
+  gap: 12px;
+  padding: 16px 20px;
   border-bottom: 1px solid #e5e5e5;
   background: #fafafa;
 }
@@ -61,31 +75,63 @@
 .recent-attempts-header h3 {
   margin: 0;
   font-size: 15px;
+  font-weight: 650;
+  color: #171717;
 }
 
 .recent-attempts-header span {
   color: #737373;
   font-size: 12px;
+  white-space: nowrap;
 }
 
 .no-attempts {
-  padding: 18px 20px;
+  padding: 24px 20px;
   margin: 0;
   color: #737373;
   font-size: 13px;
+  text-align: center;
+  line-height: 1.6;
 }
+
+/* Scrollable Attempts List */
 
 .attempt-list {
   width: 100%;
+  max-height: 280px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  scrollbar-width: thin;
+  scrollbar-color: #d4d4d4 transparent;
 }
+
+.attempt-list::-webkit-scrollbar {
+  width: 5px;
+}
+
+.attempt-list::-webkit-scrollbar-thumb {
+  background: #d4d4d4;
+  border-radius: 10px;
+}
+
+.attempt-list::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+/* Individual Attempt */
 
 .attempt-item {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  gap: 12px;
-  padding: 14px 20px;
+  gap: 14px;
+  padding: 15px 20px;
   border-bottom: 1px solid #eee;
+  transition: background 0.2s ease;
+}
+
+.attempt-item:hover {
+  background: #fafafa;
 }
 
 .attempt-item:last-child {
@@ -101,39 +147,85 @@
 
 .attempt-details strong {
   font-size: 13px;
+  color: #171717;
+  overflow-wrap: anywhere;
 }
 
 .attempt-details span,
 .attempt-details small {
   color: #737373;
   font-size: 12px;
+  line-height: 1.5;
+}
+
+.attempt-details small {
+  overflow-wrap: anywhere;
 }
 
 .attempt-verdict {
-  padding: 5px 9px;
+  padding: 6px 10px;
   background: #f5f5f5;
+  border: 1px solid #e5e5e5;
   border-radius: 5px;
   color: #525252;
   font-size: 11px;
+  font-weight: 600;
   white-space: nowrap;
 }
 
-/* Mobile layout */
+/* Scrollbars */
+
+.workspace-left::-webkit-scrollbar,
+.workspace-right::-webkit-scrollbar {
+  width: 6px;
+}
+
+.workspace-left::-webkit-scrollbar-thumb,
+.workspace-right::-webkit-scrollbar-thumb {
+  background: #d4d4d4;
+  border-radius: 10px;
+}
+
+.workspace-left::-webkit-scrollbar-track,
+.workspace-right::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+/* Tablet */
+
+@media (max-width: 1024px) {
+  .workspace {
+    grid-template-columns: minmax(280px, 38%) minmax(0, 62%);
+    gap: 12px;
+    padding: 12px;
+  }
+
+  .attempt-item {
+    padding: 13px 15px;
+  }
+}
+
+/* Mobile */
+
 @media (max-width: 768px) {
   .workspace {
     display: flex;
     flex-direction: column;
     height: auto;
     min-height: calc(100vh - 80px);
+    padding: 12px;
     overflow: visible;
   }
 
   .workspace-left {
+    width: 100%;
     height: auto;
     max-height: 500px;
+    min-height: 250px;
   }
 
   .workspace-right {
+    width: 100%;
     height: auto;
     overflow: visible;
   }
@@ -142,7 +234,34 @@
     flex-shrink: 0;
   }
 
-  .workspace-right > :first-child {
-    flex: 0 0 auto;
+  .attempt-list {
+    max-height: 280px;
+  }
+}
+
+/* Small Mobile */
+
+@media (max-width: 480px) {
+  .workspace {
+    padding: 8px;
+    gap: 10px;
+  }
+
+  .recent-attempts-header {
+    padding: 13px 14px;
+  }
+
+  .attempt-item {
+    padding: 12px;
+    gap: 8px;
+  }
+
+  .attempt-verdict {
+    padding: 5px 7px;
+    font-size: 10px;
+  }
+
+  .no-attempts {
+    padding: 18px 12px;
   }
 }
