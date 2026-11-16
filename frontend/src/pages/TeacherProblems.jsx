@@ -1,6 +1,8 @@
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import './TeacherProblems.css'
+
+const API_URL = 'http://localhost:5001/api/problems'
 
 const createTestCase = () => ({
   id: Date.now() + Math.random(),
@@ -26,91 +28,106 @@ function TeacherProblems() {
   const [difficulty, setDifficulty] = useState('All')
   const [status, setStatus] = useState('All')
   const [sortBy, setSortBy] = useState('Newest')
+
   const [showForm, setShowForm] = useState(false)
   const [selectedProblem, setSelectedProblem] = useState(null)
   const [deleteTarget, setDeleteTarget] = useState(null)
   const [editingId, setEditingId] = useState(null)
+
   const [validationMessage, setValidationMessage] = useState('')
+  const [loading, setLoading] = useState(true)
+  const [saving, setSaving] = useState(false)
 
-  const [problems, setProblems] = useState([
-    {
-      id: 1,
-      title: 'Two Sum',
-      difficulty: 'Easy',
-      status: 'Published',
-      description: 'Find two numbers that add up to a target.',
-      inputFormat: 'An array of integers and a target integer.',
-      outputFormat: 'Return the indices of the two numbers.',
-      constraints: '2 <= nums.length <= 10^4',
-      exampleInput: 'nums = [2, 7, 11, 15], target = 9',
-      exampleOutput: '[0, 1]',
-      tags: ['Array', 'Hash Table'],
-      testCases: [
-        {
-          id: 1,
-          input: '[2, 7, 11, 15], target = 9',
-          expectedOutput: '[0, 1]'
-        },
-        {
-          id: 2,
-          input: '[3, 2, 4], target = 6',
-          expectedOutput: '[1, 2]'
-        }
-      ],
-      createdAt: '2026-11-10'
-    },
-    {
-      id: 2,
-      title: 'Reverse Linked List',
-      difficulty: 'Medium',
-      status: 'Draft',
-      description: 'Reverse a singly linked list.',
-      inputFormat: 'The head of a singly linked list.',
-      outputFormat: 'Return the reversed linked list.',
-      constraints: '0 <= number of nodes <= 5000',
-      exampleInput: '1 -> 2 -> 3 -> 4 -> 5',
-      exampleOutput: '5 -> 4 -> 3 -> 2 -> 1',
-      tags: ['Linked List'],
-      testCases: [
-        {
-          id: 1,
-          input: '1 -> 2 -> 3',
-          expectedOutput: '3 -> 2 -> 1'
-        }
-      ],
-      createdAt: '2026-11-12'
-    },
-    {
-      id: 3,
-      title: 'Binary Tree Paths',
-      difficulty: 'Hard',
-      status: 'Published',
-      description: 'Find all root-to-leaf paths in a binary tree.',
-      inputFormat: 'The root node of a binary tree.',
-      outputFormat: 'Return all root-to-leaf paths.',
-      constraints: 'The number of nodes is between 1 and 100.',
-      exampleInput: 'Root = [1, 2, 3, null, 5]',
-      exampleOutput: '["1->2->5", "1->3"]',
-      tags: ['Tree', 'DFS'],
-      testCases: [
-        {
-          id: 1,
-          input: '[1, 2, 3, null, 5]',
-          expectedOutput: '["1->2->5", "1->3"]'
-        }
-      ],
-      createdAt: '2026-11-14'
-    }
-  ])
-
+  const [problems, setProblems] = useState([])
   const [form, setForm] = useState(emptyForm())
 
+  // API authentication headers
+  const getHeaders = () => {
+    const token = localStorage.getItem('token')
+
+    return {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`
+    }
+  }
+
+  // Convert API problem into frontend format
+  const formatProblem = (problem) => {
+    const examples = Array.isArray(problem.examples)
+      ? problem.examples
+      : []
+
+    return {
+      ...problem,
+      status:
+        String(problem.status || 'Draft').toLowerCase() === 'published'
+          ? 'Published'
+          : 'Draft',
+
+      tags: Array.isArray(problem.tags) ? problem.tags : [],
+
+      inputFormat: problem.inputFormat || problem.input_format || '',
+      outputFormat: problem.outputFormat || problem.output_format || '',
+
+      exampleInput:
+        problem.exampleInput || examples[0]?.input || '',
+
+      exampleOutput:
+        problem.exampleOutput || examples[0]?.expected_output || '',
+
+      testCases: Array.isArray(problem.testCases)
+        ? problem.testCases.map((testCase) => ({
+            ...testCase,
+            expectedOutput:
+              testCase.expectedOutput || testCase.expected_output || ''
+          }))
+        : []
+    }
+  }
+
+  // Fetch all problems from backend
+  const fetchProblems = async () => {
+    try {
+      setLoading(true)
+
+      const response = await fetch(`${API_URL}/manage/all`, {
+        headers: getHeaders()
+      })
+
+      const data = await response.json()
+
+      if (!response.ok) {
+        throw new Error(data.message || 'Failed to load problems')
+      }
+
+      setProblems(
+        Array.isArray(data) ? data.map(formatProblem) : []
+      )
+    } catch (error) {
+      console.error('Fetch problems error:', error)
+      setValidationMessage(error.message)
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  useEffect(() => {
+    fetchProblems()
+  }, [])
+
+  // Search, filter and sort
   const filteredProblems = problems
     .filter((problem) => {
+      const title = String(problem.title || '')
+      const description = String(problem.description || '')
+      const tags = Array.isArray(problem.tags)
+        ? problem.tags.join(' ')
+        : ''
+
       const matchesSearch =
-        problem.title.toLowerCase().includes(search.toLowerCase()) ||
-        problem.description.toLowerCase().includes(search.toLowerCase()) ||
-        problem.tags.join(' ').toLowerCase().includes(search.toLowerCase())
+        title.toLowerCase().includes(search.toLowerCase()) ||
+        description.toLowerCase().includes(search.toLowerCase()) ||
+        tags.toLowerCase().includes(search.toLowerCase())
 
       const matchesDifficulty =
         difficulty === 'All' || problem.difficulty === difficulty
@@ -121,25 +138,31 @@ function TeacherProblems() {
       return matchesSearch && matchesDifficulty && matchesStatus
     })
     .sort((a, b) => {
-      if (sortBy === 'A-Z') return a.title.localeCompare(b.title)
-      if (sortBy === 'Z-A') return b.title.localeCompare(a.title)
+      if (sortBy === 'A-Z') {
+        return a.title.localeCompare(b.title)
+      }
+
+      if (sortBy === 'Z-A') {
+        return b.title.localeCompare(a.title)
+      }
 
       if (sortBy === 'Difficulty') {
         const levels = { Easy: 1, Medium: 2, Hard: 3 }
         return levels[a.difficulty] - levels[b.difficulty]
       }
 
-      return b.id - a.id
+      return new Date(b.createdAt || 0) - new Date(a.createdAt || 0)
     })
 
   const totalProblems = problems.length
 
   const publishedCount = problems.filter(
-    (p) => p.status === 'Published'
+    (problem) => problem.status === 'Published'
   ).length
 
   const draftCount = totalProblems - publishedCount
 
+  // Reset form
   const resetForm = () => {
     setForm(emptyForm())
     setEditingId(null)
@@ -147,8 +170,8 @@ function TeacherProblems() {
     setShowForm(false)
   }
 
-  // Validate and save a problem
-  const handleSubmit = (e, publish = false) => {
+  // Create or update a problem
+  const handleSubmit = async (e, publish = false) => {
     e.preventDefault()
 
     if (!form.title.trim() || !form.description.trim()) {
@@ -158,8 +181,6 @@ function TeacherProblems() {
       return
     }
 
-    // Ignore completely blank test cases.
-    // Reject partially completed test cases.
     const incompleteTestCase = form.testCases.some((testCase) => {
       const hasInput = testCase.input.trim() !== ''
       const hasOutput = testCase.expectedOutput.trim() !== ''
@@ -188,57 +209,89 @@ function TeacherProblems() {
     }
 
     const problemData = {
-      ...form,
       title: form.title.trim(),
+      description: form.description.trim(),
+      difficulty: form.difficulty,
+      inputFormat: form.inputFormat,
+      outputFormat: form.outputFormat,
+      constraints: form.constraints,
+
+      exampleInput: form.exampleInput,
+      exampleOutput: form.exampleOutput,
+
       tags: form.tags
         .split(',')
         .map((tag) => tag.trim())
         .filter(Boolean),
-      testCases: validTestCases
+
+      testCases: validTestCases,
+
+      status: publish ? 'Published' : 'Draft'
     }
 
-    if (editingId !== null) {
-      setProblems((previous) =>
-        previous.map((problem) =>
-          problem.id === editingId
-            ? {
-                ...problem,
-                ...problemData,
-                status: publish ? 'Published' : problem.status
-              }
-            : problem
-        )
+    try {
+      setSaving(true)
+      setValidationMessage('')
+
+      const isEditing = editingId !== null
+
+      const url = isEditing
+        ? `${API_URL}/${editingId}`
+        : API_URL
+
+      const response = await fetch(url, {
+        method: isEditing ? 'PUT' : 'POST',
+        headers: getHeaders(),
+        body: JSON.stringify(problemData)
+      })
+
+      const data = await response.json()
+
+      if (!response.ok) {
+        throw new Error(data.message || 'Failed to save problem')
+      }
+
+      await fetchProblems()
+      resetForm()
+
+      alert(
+        isEditing
+          ? 'Problem updated successfully!'
+          : publish
+            ? 'Problem published successfully!'
+            : 'Problem saved as draft successfully!'
       )
-    } else {
-      setProblems((previous) => [
-        ...previous,
-        {
-          id: Date.now(),
-          ...problemData,
-          status: publish ? 'Published' : 'Draft',
-          createdAt: new Date().toISOString().slice(0, 10)
-        }
-      ])
+    } catch (error) {
+      console.error('Save problem error:', error)
+      setValidationMessage(error.message)
+    } finally {
+      setSaving(false)
     }
-
-    setValidationMessage('')
-    resetForm()
   }
 
   // Edit an existing problem
   const handleEdit = (problem) => {
     setForm({
-      title: problem.title,
-      difficulty: problem.difficulty,
+      title: problem.title || '',
+      difficulty: problem.difficulty || 'Easy',
       description: problem.description || '',
       inputFormat: problem.inputFormat || '',
       outputFormat: problem.outputFormat || '',
       constraints: problem.constraints || '',
+
       exampleInput: problem.exampleInput || '',
       exampleOutput: problem.exampleOutput || '',
-      tags: problem.tags.join(', '),
+
+      tags: Array.isArray(problem.tags)
+        ? problem.tags.join(', ')
+        : '',
+
       testCases: problem.testCases?.length
-        ? problem.testCases.map((testCase) => ({ ...testCase }))
+        ? problem.testCases.map((testCase) => ({
+            id: testCase.id || Date.now() + Math.random(),
+            input: testCase.input || '',
+            expectedOutput: testCase.expectedOutput || ''
+          }))
         : [createTestCase()]
     })
 
@@ -248,16 +301,17 @@ function TeacherProblems() {
     setShowForm(true)
   }
 
-  // Add a test case
+  // Add test case
   const addTestCase = () => {
     setForm((previous) => ({
       ...previous,
       testCases: [...previous.testCases, createTestCase()]
     }))
+
     setValidationMessage('')
   }
 
-  // Update a test case
+  // Update test case
   const updateTestCase = (id, field, value) => {
     setForm((previous) => ({
       ...previous,
@@ -267,10 +321,11 @@ function TeacherProblems() {
           : testCase
       )
     }))
+
     setValidationMessage('')
   }
 
-  // Remove a test case
+  // Remove test case
   const removeTestCase = (id) => {
     setForm((previous) => ({
       ...previous,
@@ -278,38 +333,73 @@ function TeacherProblems() {
         (testCase) => testCase.id !== id
       )
     }))
+
     setValidationMessage('')
   }
 
-  // Open delete confirmation
+  // Delete problem
   const handleDelete = (problem) => {
     setDeleteTarget(problem)
   }
 
-  // Confirm deletion
-  const confirmDelete = () => {
+  const confirmDelete = async () => {
     if (!deleteTarget) return
 
-    setProblems((previous) =>
-      previous.filter((p) => p.id !== deleteTarget.id)
-    )
+    try {
+      const response = await fetch(
+        `${API_URL}/${deleteTarget.id}`,
+        {
+          method: 'DELETE',
+          headers: getHeaders()
+        }
+      )
 
-    setSelectedProblem(null)
-    setDeleteTarget(null)
+      const data = await response.json()
+
+      if (!response.ok) {
+        throw new Error(data.message || 'Failed to delete problem')
+      }
+
+      setSelectedProblem(null)
+      setDeleteTarget(null)
+
+      await fetchProblems()
+
+      alert('Problem deleted successfully!')
+    } catch (error) {
+      console.error('Delete problem error:', error)
+      alert(error.message)
+    }
   }
 
   // Publish or unpublish
-  const togglePublish = (problem) => {
-    setProblems((previous) =>
-      previous.map((p) =>
-        p.id === problem.id
-          ? {
-              ...p,
-              status: p.status === 'Draft' ? 'Published' : 'Draft'
-            }
-          : p
+  const togglePublish = async (problem) => {
+    const newStatus =
+      problem.status === 'Draft' ? 'Published' : 'Draft'
+
+    try {
+      const response = await fetch(
+        `${API_URL}/${problem.id}/status`,
+        {
+          method: 'PATCH',
+          headers: getHeaders(),
+          body: JSON.stringify({
+            status: newStatus
+          })
+        }
       )
-    )
+
+      const data = await response.json()
+
+      if (!response.ok) {
+        throw new Error(data.message || 'Failed to update status')
+      }
+
+      await fetchProblems()
+    } catch (error) {
+      console.error('Publish status error:', error)
+      alert(error.message)
+    }
   }
 
   return (
@@ -321,11 +411,6 @@ function TeacherProblems() {
           <h1>Problem Management</h1>
           <p>Create, search, review and manage coding problems.</p>
         </div>
-
-        <button className="add-problem-button">
-          + Create Problem
-        </button>
-      </div>
 
         <button
           className="add-problem-button"
@@ -453,6 +538,7 @@ function TeacherProblems() {
               setForm({ ...form, tags: e.target.value })
             }
           />
+
           <small>Separate multiple tags using commas.</small>
 
           {/* Test Case Manager */}
@@ -526,13 +612,18 @@ function TeacherProblems() {
 
           {/* Form Actions */}
           <div className="problem-form-actions">
-            <button type="submit" className="add-problem-button">
-              Save as Draft
+            <button
+              type="submit"
+              className="add-problem-button"
+              disabled={saving}
+            >
+              {saving ? 'Saving...' : 'Save as Draft'}
             </button>
 
             <button
               type="button"
               className="add-problem-button"
+              disabled={saving}
               onClick={(e) => {
                 const formElement = e.currentTarget.closest('form')
 
@@ -541,9 +632,11 @@ function TeacherProblems() {
                 }
               }}
             >
-              {editingId !== null
-                ? 'Save Changes & Publish'
-                : 'Publish Problem'}
+              {saving
+                ? 'Saving...'
+                : editingId !== null
+                  ? 'Save Changes & Publish'
+                  : 'Publish Problem'}
             </button>
 
             <button type="button" onClick={resetForm}>
@@ -615,45 +708,51 @@ function TeacherProblems() {
 
         {/* Problem Rows */}
         <div className="teacher-problem-list">
-          {filteredProblems.map((problem) => (
-            <div className="teacher-problem-row" key={problem.id}>
-              <div className="problem-main-info">
-                <h3>{problem.title}</h3>
+          {loading ? (
+            <p>Loading problems...</p>
+          ) : (
+            <>
+              {filteredProblems.map((problem) => (
+                <div className="teacher-problem-row" key={problem.id}>
+                  <div className="problem-main-info">
+                    <h3>{problem.title}</h3>
 
-                <span>{problem.difficulty}</span>
-                <span>{problem.status}</span>
+                    <span>{problem.difficulty}</span>
+                    <span>{problem.status}</span>
 
-                <p>{problem.description}</p>
+                    <p>{problem.description}</p>
 
-                <div className="problem-tags">
-                  {problem.tags.map((tag) => (
-                    <span key={tag}>{tag}</span>
-                  ))}
+                    <div className="problem-tags">
+                      {problem.tags.map((tag) => (
+                        <span key={tag}>{tag}</span>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div className="teacher-problem-actions">
+                    <button onClick={() => setSelectedProblem(problem)}>
+                      View
+                    </button>
+
+                    <button onClick={() => handleEdit(problem)}>
+                      Edit
+                    </button>
+
+                    <button onClick={() => togglePublish(problem)}>
+                      {problem.status === 'Draft' ? 'Publish' : 'Unpublish'}
+                    </button>
+
+                    <button onClick={() => handleDelete(problem)}>
+                      Delete
+                    </button>
+                  </div>
                 </div>
-              </div>
+              ))}
 
-              <div className="teacher-problem-actions">
-                <button onClick={() => setSelectedProblem(problem)}>
-                  View
-                </button>
-
-                <button onClick={() => handleEdit(problem)}>
-                  Edit
-                </button>
-
-                <button onClick={() => togglePublish(problem)}>
-                  {problem.status === 'Draft' ? 'Publish' : 'Unpublish'}
-                </button>
-
-                <button onClick={() => handleDelete(problem)}>
-                  Delete
-                </button>
-              </div>
-            </div>
-          ))}
-
-          {filteredProblems.length === 0 && (
-            <p>No problems match your filters.</p>
+              {filteredProblems.length === 0 && (
+                <p>No problems match your filters.</p>
+              )}
+            </>
           )}
         </div>
       </section>

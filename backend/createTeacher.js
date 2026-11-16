@@ -1,13 +1,19 @@
 
+require('dotenv').config()
+
 const bcrypt = require('bcryptjs')
 const pool = require('./db')
 
 async function createTeacher() {
   try {
-    const username = 'teacher01'
-    const name = 'Test Teacher'
-    const email = 'teacher01@example.com'
-    const password = 'Teacher@123'
+    const username = process.env.TEACHER_USERNAME
+    const name = process.env.TEACHER_NAME
+    const email = process.env.TEACHER_EMAIL
+    const password = process.env.TEACHER_PASSWORD
+
+    if (!username || !name || !email || !password) {
+      throw new Error('Missing teacher environment variables')
+    }
 
     const existing = await pool.query(
       'SELECT id FROM users WHERE email = $1 OR username = $2',
@@ -29,10 +35,9 @@ async function createTeacher() {
     )
 
     console.log('Teacher account created successfully!')
-    console.log('Email:', email)
-    console.log('Password:', password)
   } catch (error) {
     console.error('Error creating teacher:', error)
+    process.exitCode = 1
   } finally {
     await pool.end()
   }
